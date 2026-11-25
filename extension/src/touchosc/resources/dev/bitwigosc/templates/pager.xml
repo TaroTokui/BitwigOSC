@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<node ID="00000000-0000-0000-0000-000000000000" type="PAGER">
+  <properties>
+    <property type="b">
+      <key><![CDATA[background]]></key>
+      <value>1</value>
+    </property>
+    <property type="c">
+      <key><![CDATA[color]]></key>
+      <value>
+        <r>0.25</r>
+        <g>0.25</g>
+        <b>0.25</b>
+        <a>1</a>
+      </value>
+    </property>
+    <property type="f">
+      <key><![CDATA[cornerRadius]]></key>
+      <value>1</value>
+    </property>
+    <property type="r">
+      <key><![CDATA[frame]]></key>
+      <value>
+        <x>0</x>
+        <y>0</y>
+        <w>640</w>
+        <h>480</h>
+      </value>
+    </property>
+    <property type="b">
+      <key><![CDATA[grabFocus]]></key>
+      <value>0</value>
+    </property>
+    <property type="b">
+      <key><![CDATA[interactive]]></key>
+      <value>1</value>
+    </property>
+    <property type="b">
+      <key><![CDATA[locked]]></key>
+      <value>0</value>
+    </property>
+    <property type="s">
+      <key><![CDATA[name]]></key>
+      <value><![CDATA[pager2]]></value>
+    </property>
+    <property type="i">
+      <key><![CDATA[orientation]]></key>
+      <value>0</value>
+    </property>
+    <property type="b">
+      <key><![CDATA[outline]]></key>
+      <value>1</value>
+    </property>
+    <property type="i">
+      <key><![CDATA[outlineStyle]]></key>
+      <value>0</value>
+    </property>
+    <property type="i">
+      <key><![CDATA[pointerPriority]]></key>
+      <value>0</value>
+    </property>
+    <property type="i">
+      <key><![CDATA[shape]]></key>
+      <value>1</value>
+    </property>
+    <property type="b">
+      <key><![CDATA[tabLabels]]></key>
+      <value>1</value>
+    </property>
+    <property type="b">
+      <key><![CDATA[tabbar]]></key>
+      <value>1</value>
+    </property>
+    <property type="b">
+      <key><![CDATA[tabbarDoubleTap]]></key>
+      <value>0</value>
+    </property>
+    <property type="i">
+      <key><![CDATA[tabbarSize]]></key>
+      <value>40</value>
+    </property>
+    <property type="i">
+      <key><![CDATA[textSizeOff]]></key>
+      <value>14</value>
+    </property>
+    <property type="i">
+      <key><![CDATA[textSizeOn]]></key>
+      <value>14</value>
+    </property>
+    <property type="b">
+      <key><![CDATA[visible]]></key>
+      <value>1</value>
+    </property>
+  </properties>
+  <values>
+    <value>
+      <key><![CDATA[page]]></key>
+      <locked>0</locked>
+      <lockedDefaultCurrent>0</lockedDefaultCurrent>
+      <default><![CDATA[0]]></default>
+      <defaultPull>0</defaultPull>
+    </value>
+    <value>
+      <key><![CDATA[touch]]></key>
+      <locked>0</locked>
+      <lockedDefaultCurrent>0</lockedDefaultCurrent>
+      <default><![CDATA[false]]></default>
+      <defaultPull>0</defaultPull>
+    </value>
+  </values>
+  <children />
+</node>

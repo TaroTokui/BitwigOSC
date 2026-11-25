@@ -1,0 +1,11 @@
+.DS_Store
+*.log
+.gradle/
+build/
+.idea/
+.claude/worktrees/
+
+# Private working notes (kept on the developer's PC only)
+situation.md
+docs/plans/
+docs/references/

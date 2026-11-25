@@ -1,0 +1,2 @@
+# TouchOSC のレイアウトは zlib で圧縮したバイナリ。改行の変換をさせない。
+*.tosc binary
