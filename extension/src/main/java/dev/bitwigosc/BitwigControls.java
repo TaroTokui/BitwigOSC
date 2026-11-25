@@ -45,8 +45,10 @@ final class BitwigControls
    {
       switch (param)
       {
-         case VOLUME -> track.volume().set(OscArgs.clampUnit(value));
-         case PAN -> track.pan().set(OscArgs.clampUnit(value));
+         // setImmediately は利用者のテイクオーバー設定(Pickup など)を無視して、すぐ値を変える。
+         // 表示は Feedback で Bitwig に揃うので、受け付けを待つ必要がない。
+         case VOLUME -> track.volume().setImmediately(OscArgs.clampUnit(value));
+         case PAN -> track.pan().setImmediately(OscArgs.clampUnit(value));
          // TouchOSC のボタンはトグルで、押すたびに新しい状態を送ってくる。切り替えではなく、その状態にする。
          case MUTE -> track.mute().set(OscArgs.isOn(value));
          case SOLO -> track.solo().set(OscArgs.isOn(value));
