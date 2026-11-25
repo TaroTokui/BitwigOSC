@@ -54,7 +54,7 @@ Bitwig で **Ctrl + Enter** を押して `console` と入れ、**Show Control Sc
 
 | ログ | 意味 |
 |---|---|
-| `BitwigOSC 0.4.0: listening on 10001, sending to <送り先>:10002` | 拡張が起動した |
+| `BitwigOSC 0.4.1: listening on 10001, sending to <送り先>:10002` | 拡張が起動した |
 | `OSC ignored: <アドレス> (unknown address)` | 上の表にないアドレスが届いた |
 | `OSC out: /pong` は出るのに TouchOSC に届かない | **TouchOSC host** が機器の IP アドレスになっているかを確かめる。UDP は届かなくてもエラーにならない |
 

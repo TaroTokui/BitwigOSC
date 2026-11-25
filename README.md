@@ -53,7 +53,7 @@ To see the log in Bitwig, press **Ctrl + Enter**, type `console`, choose **Show 
 
 | Log line | Meaning |
 |---|---|
-| `BitwigOSC 0.4.0: listening on 10001, sending to <host>:10002` | The extension started |
+| `BitwigOSC 0.4.1: listening on 10001, sending to <host>:10002` | The extension started |
 | `OSC ignored: <address> (unknown address)` | A message arrived with an address that is not in the table above |
 | `OSC out: /pong`, but TouchOSC gets nothing | Check that **TouchOSC host** is the device's IP address. UDP does not report lost messages |
 
