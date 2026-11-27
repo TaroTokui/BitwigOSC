@@ -9,7 +9,7 @@ import com.bitwig.extension.controller.api.ControllerHost;
 
 public class BitwigOscDefinition extends ControllerExtensionDefinition
 {
-   static final String VERSION = "0.4.1";
+   static final String VERSION = "0.5.0";
    private static final UUID ID = UUID.fromString("5f1dc41c-33a6-425a-a61a-863d0ce5eff7");
 
    @Override public String getName() { return "BitwigOSC"; }
