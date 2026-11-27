@@ -6,10 +6,12 @@ import com.bitwig.extension.controller.api.Track;
 import com.bitwig.extension.controller.api.TrackBank;
 import com.bitwig.extension.controller.api.Transport;
 
+import dev.bitwigosc.OscCommand.MixerScroll;
 import dev.bitwigosc.OscCommand.TrackCommand;
 import dev.bitwigosc.OscCommand.TrackParam;
 import dev.bitwigosc.OscCommand.TransportCommand;
 import dev.bitwigosc.OscCommand.TransportParam;
+import dev.bitwigosc.OscCommand.TransportStop;
 
 /**
  * 解釈した OSC の操作を、Bitwig のトラックとトランスポートに書き込む。
@@ -19,16 +21,23 @@ final class BitwigControls
 {
    /** TouchOSC のレイアウト(tag 1〜8)に合わせる。 */
    static final int TRACK_COUNT = 8;
+   /** ページ 2(クリップ)のシーンの段数。TouchOSC のレイアウト(LauncherPage)に合わせる。 */
+   static final int SCENE_COUNT = 8;
 
    private final TrackBank tracks;
    private final Transport transport;
+   private final ClipLauncher launcher;
+   private final Playhead playhead;
 
    /** Bitwig の決まりで、バンクやトランスポートは init() の中でしか作れない。 */
    BitwigControls(final ControllerHost host)
    {
-      // FX トラックを除いた、ミキサーの左から順のトラック。バンクは動かさず、先頭の 8 本に固定する。
-      tracks = host.createMainTrackBank(TRACK_COUNT, 0, 0);
+      // FX トラックを除いた、ミキサーの上から順のトラック。ページ 1 とページ 2 で同じバンクを使う。
+      // どちらの ▲ ▼ でも同じ 8 本がずれ、Bitwig のクリップランチャーの枠も一緒に動く。
+      tracks = host.createMainTrackBank(TRACK_COUNT, 0, SCENE_COUNT);
       transport = host.createTransport();
+      launcher = new ClipLauncher(tracks, TRACK_COUNT, SCENE_COUNT);
+      playhead = new Playhead(transport);
    }
 
    void apply(final OscCommand command, final double value)
@@ -37,6 +46,31 @@ final class BitwigControls
       {
          case TrackCommand t -> applyToTrack(tracks.getItemAt(t.index()), t.param(), value);
          case TransportCommand t -> applyToTransport(t.param(), value);
+         case TransportStop s -> stop(value);
+         case MixerScroll s -> scroll(s, value);
+         case LauncherCommand c -> launcher.apply(c, value);
+      }
+   }
+
+   private void stop(final double value)
+   {
+      // 停止のボタンもモーメンタリ。離したときの 0 では止めない。
+      // 止まると isPlaying の Observer が呼ばれ、再生ボタンの光も消える。
+      if (OscArgs.isOn(value))
+         transport.stop();
+   }
+
+   private void scroll(final MixerScroll command, final double value)
+   {
+      // ボタンはモーメンタリで、離したときにも 0 を送ってくる。押したときだけ動かす。
+      if (!OscArgs.isOn(value))
+         return;
+      switch (command.direction())
+      {
+         case UP -> tracks.scrollBackwards();
+         case DOWN -> tracks.scrollForwards();
+         // MixerScroll は上下でしか作れない(構築子で弾く)。
+         case LEFT, RIGHT -> throw new IllegalStateException("mixer cannot scroll " + command.direction());
       }
    }
 
@@ -76,6 +110,8 @@ final class BitwigControls
       }
       for (final TransportParam param : TransportParam.values())
          observeTransport(new TransportCommand(param), feedback);
+      launcher.observe(feedback);
+      playhead.observe(feedback);
    }
 
    /**
@@ -93,6 +129,8 @@ final class BitwigControls
       }
       for (final TransportParam param : TransportParam.values())
          sendTransport(new TransportCommand(param), feedback);
+      launcher.sendAll(feedback);
+      playhead.sendAll();
    }
 
    private void sendColor(final int index, final Feedback feedback)

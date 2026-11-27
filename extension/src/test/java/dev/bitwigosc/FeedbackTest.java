@@ -77,4 +77,40 @@ class FeedbackTest
          new Sent("/4/colorG", List.of(0.0f)),
          new Sent("/4/colorB", List.of(0.0f))), sent);
    }
+
+   @Test
+   void sendsSlotColorToItsTrackAndScene()
+   {
+      feedback.slotColor(1, 4, new SlotColor.Rgb(0.25f, 0.5f, 1.0f));
+
+      assertEquals(List.of(
+         new Sent("/clip/2/5/colorR", List.of(0.25f)),
+         new Sent("/clip/2/5/colorG", List.of(0.5f)),
+         new Sent("/clip/2/5/colorB", List.of(1.0f))), sent);
+   }
+
+   @Test
+   void sendsLauncherTrackColorAndBlackWhereThereIsNoTrack()
+   {
+      // ページ 2 は表示する範囲を動かせるので、範囲の端の先にはトラックがないことがある。
+      feedback.launcherTrackColor(0, true, 1.0f, 0.5f, 0.0f);
+      feedback.launcherTrackColor(7, false, 1.0f, 0.5f, 0.0f);
+
+      assertEquals(List.of(
+         new Sent("/clip/1/colorR", List.of(1.0f)),
+         new Sent("/clip/1/colorG", List.of(0.5f)),
+         new Sent("/clip/1/colorB", List.of(0.0f)),
+         new Sent("/clip/8/colorR", List.of(0.0f)),
+         new Sent("/clip/8/colorG", List.of(0.0f)),
+         new Sent("/clip/8/colorB", List.of(0.0f))), sent);
+   }
+
+   @Test
+   void sendsTheBarAsTextToTheTransportNumber()
+   {
+      // ヘッダーの小節の表示はどのページにも出るので、クリップではなくトランスポート(0)の番号で送る。
+      feedback.position("3.2");
+
+      assertEquals(List.of(new Sent("/0/position", List.of("3.2"))), sent);
+   }
 }

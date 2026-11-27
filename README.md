@@ -4,7 +4,9 @@
 
 A Bitwig Studio controller extension that lets [TouchOSC](https://hexler.net/touchosc) control Bitwig directly over OSC.
 
-- 8 track faders (volume) with mute / solo / arm, plus play and loop
+- A header on every page with play, stop, loop and the current bar.beat. Play and stop are white ▶ ■ on grey, and the play button turns Bitwig orange while Bitwig is playing
+- 8 tracks, one per row from top to bottom like Bitwig, each with mute / solo / arm and a horizontal volume fader. ▲ ▼ move the tracks one at a time, together with the Clips tab and the frame shown in Bitwig
+- A second tab, "Clips": an 8 × 8 clip launcher grid (tracks are rows, scenes are columns) with scene launch, track stop and one-step scrolling (▲ ▼ tracks, ◀ ▶ scenes). Clip state is shown by colour
 - Changes made in Bitwig, and the track colours, are sent back to TouchOSC
 - Opening the layout fetches the current state from Bitwig
 
@@ -34,16 +36,26 @@ The extension restarts by itself when you change a port or the host.
 
 ## OSC addresses
 
-`/{n}/...` is the n-th track from the left of the mixer (1–8). `/0/...` is the transport.
+`/{n}/...` is the n-th track in the mixer view (1–8), counted from the top row after scrolling with `/mixer/scrollUp` / `scrollDown`. `/0/...` is the transport.
 
 | Address | Value | |
 |---|---|---|
 | `/{1-8}/volume`, `/{1-8}/pan` | 0.0–1.0 | Both ways |
 | `/{1-8}/mute`, `solo`, `arm`, `active` | 1.0 / 0.0 | Both ways |
 | `/0/playState`, `/0/loopEnabled` | 1.0 / 0.0 | Both ways |
+| `/0/stop` | 1.0 | TouchOSC → Bitwig. Stops playback |
+| `/0/position` | string | Bitwig → TouchOSC. Current bar.beat, e.g. `12.3` |
 | `/{1-8}/colorR`, `colorG`, `colorB` | 0.0–1.0 | Bitwig → TouchOSC. Black when there is no track |
 | `/sync` | – | TouchOSC → Bitwig. Sends back the whole state |
 | `/ping` | – | TouchOSC → Bitwig. Answers `/pong` |
+| `/clip/{1-8}/{1-8}/launch` | 1.0 | TouchOSC → Bitwig. Launches the clip at track, scene |
+| `/clip/{1-8}/stop`, `/scene/{1-8}/launch` | 1.0 | TouchOSC → Bitwig. Stops a track / launches a scene |
+| `/mixer/scrollUp`, `scrollDown` | 1.0 | TouchOSC → Bitwig. Moves the tracks by one, same as `/clip/scrollUp` / `scrollDown` |
+| `/clip/scrollUp`, `scrollDown`, `scrollLeft`, `scrollRight` | 1.0 | TouchOSC → Bitwig. Up / Down move the tracks by one, Left / Right move the scenes by one |
+| `/clip/{1-8}/{1-8}/colorR`, `colorG`, `colorB` | 0.0–1.0 | Bitwig → TouchOSC. Slot colour, dimmed when stopped, red when recording |
+| `/clip/{1-8}/colorR`, `colorG`, `colorB` | 0.0–1.0 | Bitwig → TouchOSC. Track colour of the clip grid |
+
+Numbers under `/clip` and `/scene` are positions in the grid. The grid shares its tracks with the mixer, so scrolling up or down moves both pages.
 
 You can also use the extension from your own layout, as long as it sends these addresses.
 

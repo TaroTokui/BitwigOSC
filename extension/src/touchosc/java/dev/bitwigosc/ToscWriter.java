@@ -44,9 +44,11 @@ final class ToscWriter
       Kind.FADER, "fader.xml",
       Kind.BUTTON, "button.xml",
       Kind.PLAY_BUTTON, "play-button.xml",
+      Kind.MOMENTARY_BUTTON, "momentary-button.xml",
       Kind.COLOR_BOX, "color-box.xml",
       Kind.BOX, "box.xml",
-      Kind.LABEL, "label.xml");
+      Kind.LABEL, "label.xml",
+      Kind.TEXT_LABEL, "text-label.xml");
 
    private ToscWriter()
    {
@@ -83,7 +85,13 @@ final class ToscWriter
          pageNodes.add(pageNode(document, page));
 
       final Element pager = container(document, "pager.xml", "pager", pageNodes);
-      final Element root = container(document, "root-group.xml", "group", List.of(pager));
+      setFrame(pager, MixerLayout.PAGER_FRAME);
+
+      // ヘッダーはページの外(いちばん外の入れ物の直下)に置くので、どのページを開いていても出る。
+      final List<Element> rootChildren = new ArrayList<>(List.of(pager));
+      for (final Control control : layout.header())
+         rootChildren.add(controlNode(document, control));
+      final Element root = container(document, "root-group.xml", "group", rootChildren);
       // TouchOSC はレイアウトを読み込んだときに、このスクリプトの init() を呼ぶ。
       setString(root, "script", layout.rootScript());
       lexml.appendChild(root);
@@ -101,6 +109,7 @@ final class ToscWriter
 
       final Element node = container(document, "page.xml", page.name(), controls);
       setString(node, "tabLabel", page.tabLabel());
+      setFrame(node, MixerLayout.PAGE_FRAME);
       return node;
    }
 

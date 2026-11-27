@@ -3,7 +3,7 @@
   <properties>
     <property type="b">
       <key><![CDATA[background]]></key>
-      <value>1</value>
+      <value>0</value>
     </property>
     <property type="i">
       <key><![CDATA[buttonType]]></key>
@@ -49,7 +49,7 @@
     </property>
     <property type="i">
       <key><![CDATA[orientation]]></key>
-      <value>1</value>
+      <value>0</value>
     </property>
     <property type="b">
       <key><![CDATA[outline]]></key>
@@ -73,7 +73,7 @@
     </property>
     <property type="i">
       <key><![CDATA[shape]]></key>
-      <value>3</value>
+      <value>1</value>
     </property>
     <property type="s">
       <key><![CDATA[tag]]></key>

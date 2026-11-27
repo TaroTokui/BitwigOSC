@@ -1,9 +1,11 @@
 package dev.bitwigosc;
 
+import java.util.function.UnaryOperator;
+
 /**
  * Bitwig 側の変化を、TouchOSC に送る OSC のメッセージにする。
  * アドレスは受け取るときと同じ {@link OscCommand} から作るので、行きと帰りでずれない。
- * 値はすべて float で送る(TouchOSC のフェーダーとボタンは float を受ける)。
+ * 値は float で送る(TouchOSC のフェーダーとボタンは float を受ける)。小節の表示だけは文字で送る。
  */
 final class Feedback
 {
@@ -44,8 +46,33 @@ final class Feedback
     */
    void trackColor(final int index, final boolean exists, final float red, final float green, final float blue)
    {
-      sender.send(OscCommand.trackAddress(index, "colorR"), exists ? red : NO_TRACK);
-      sender.send(OscCommand.trackAddress(index, "colorG"), exists ? green : NO_TRACK);
-      sender.send(OscCommand.trackAddress(index, "colorB"), exists ? blue : NO_TRACK);
+      color(name -> OscCommand.trackAddress(index, name), exists, red, green, blue);
+   }
+
+   /** ページ 2 の行の頭の箱。ミキサーと同じく、トラックがない位置には黒を送る。 */
+   void launcherTrackColor(final int track, final boolean exists, final float red, final float green,
+      final float blue)
+   {
+      color(name -> LauncherCommand.trackAddress(track, name), exists, red, green, blue);
+   }
+
+   /** ページ 2 のマス。色は {@link SlotColor} で状態から決めたもの。 */
+   void slotColor(final int track, final int scene, final SlotColor.Rgb rgb)
+   {
+      color(name -> LauncherCommand.slotAddress(track, scene, name), true, rgb.red(), rgb.green(), rgb.blue());
+   }
+
+   /** ヘッダーの小節の表示({@code 12.3} など)。TouchOSC のラベルは文字で受ける。 */
+   void position(final String label)
+   {
+      sender.send(OscCommand.POSITION_ADDRESS, label);
+   }
+
+   private void color(final UnaryOperator<String> address, final boolean exists, final float red,
+      final float green, final float blue)
+   {
+      sender.send(address.apply("colorR"), exists ? red : NO_TRACK);
+      sender.send(address.apply("colorG"), exists ? green : NO_TRACK);
+      sender.send(address.apply("colorB"), exists ? blue : NO_TRACK);
    }
 }

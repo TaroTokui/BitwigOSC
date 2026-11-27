@@ -144,11 +144,12 @@ public class BitwigOscExtension extends ControllerExtension
       }
       if (OscCommand.SYNC_ADDRESS.equals(address))
       {
-         // 74 通をまとめて送り、Bitwig の値も読むので、Observer と同じ拡張のスレッドで動かす(起動し直しと同じやり方)。
+         // 300 通近く(ミキサー 74 + クリップ 216)をまとめて送り、Bitwig の値も読むので、Observer と同じ拡張のスレッドで動かす(起動し直しと同じやり方)。
          getHost().scheduleTask(this::sendAll, 0);
          return;
       }
-      final Optional<OscCommand> command = OscCommand.parse(address, BitwigControls.TRACK_COUNT);
+      final Optional<OscCommand> command = OscCommand.parse(address, BitwigControls.TRACK_COUNT,
+         BitwigControls.SCENE_COUNT);
       final OptionalDouble value = OscArgs.firstNumber(message.getArguments());
       if (command.isPresent() && value.isPresent())
       {
